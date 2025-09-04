@@ -114,7 +114,7 @@ const Table = () => {
         </table>
 
         <div>
-            <AddRow handleAddRow={handleAddRow}/>
+            <AddRow handleAddRow={handleAddRow} isAddRowOpen={isAddRowOpen} setIsAddRowOpen={setIsAddRowOpen}/>
         </div>
         </div>
         {/* modal section */}

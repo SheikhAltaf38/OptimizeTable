@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function AddRow({handleAddRow}) {
+function AddRow({handleAddRow, isAddRowOpen , setIsAddRowOpen}) {
     const initialValue = {
     id: null,
     name: "",
@@ -8,16 +8,17 @@ function AddRow({handleAddRow}) {
   }
   const [form, setForm] = useState(initialValue);
   return (
-    <div className="mt-[150px] border ">
-      <div className="border flex justify-center items-center flex-col">
-        <button
+    <div className="mt-[150px] mb-2">
+      <div className=" flex justify-center items-center flex-col">
+        <button onClick={()=>setIsAddRowOpen(true)}
           className="bg-gradient-to-b from-gray-700 to-gray-950 
             text-white px-5 py-2 rounded-lg hover:scale-105 transition-all duration-300 text-lg 
             cursor-pointer"
         >
           Add Row
         </button>
-        {/* form section */}
+        {isAddRowOpen && (<>
+         
         <div className="mt-5 w-[300px] border p-3 flex flex-col bg-gray-800 text-white rounded-xl ">
           <label htmlFor="id" className="text-lg ml-1">
             Id
@@ -51,14 +52,17 @@ function AddRow({handleAddRow}) {
             onChange={(e)=>{setForm({...form, age:e.target.value})}}
             className="w-[150px] text-black placeholder:text-gray-800 md:w-[200px] lg:w-[250px] rounded-md bg-gray-200 px-2 py-1 outline-none focus:bg-gray-300"
           />
-        </div>
-
-        <div className="mt-3">
+        <div className="mt-3 mx-auto">
             <button onClick={()=>{handleAddRow(form);}}
             className="px-4 py-1 text-xl bg-gradient-to-b from-white via-gray-500 to-gray-900 rounded-xl hover:scale-105 transition-all duration-300 font-semibold shadow-xl mb-5 shadow-gray-900">
                 Submit
             </button>
         </div>
+        </div>
+
+        </>)
+        }
+       
       </div>
     </div>
   );
