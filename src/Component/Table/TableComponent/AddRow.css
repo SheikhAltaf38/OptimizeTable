@@ -1,0 +1,23 @@
+.button {
+    animation: animateButton 10000ms linear 2000ms infinite  backwards;
+}
+
+
+@keyframes animateButton {
+    0%{
+        transform: translate(0,0);
+    }
+    25%{
+        transform:translate(-50px, -50px)
+        ;   
+    } 
+    50%{
+      transform: translate(-100px,0) ;
+    }
+    75%{
+        transform: translate(-50px, 50px);
+    } 
+    100%{
+        transform: translate(0,0);
+    }
+}
