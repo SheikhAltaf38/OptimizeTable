@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import usersDataJson from "../../data/users.json";
 import TableRow from "./TableComponent/Tablerow.jsx";
 import TableDataPopUp from "./TableComponent/TableDataPopup.jsx";
@@ -30,33 +30,36 @@ const Table = () => {
     localStorage.setItem("usersData", JSON.stringify(users));
   }, [users]);
 
-  function handleTablePopup(id: string) {
+  const handleTablePopup= useCallback((id: string)=> {
     const user = users.find((u: TUser) => u.id === id) ?? null;
     if (user) {
       setUser(user);
       setIsOpen(true);
     }
-  }
+    
+  } ,[])
 
-  const handleUpdateTable = (id: string, data: Omit<TUser, "id">) => {
+  const handleUpdateTable = useCallback((id: string, data: Omit<TUser, "id">) => {
     const updatedUser: TUser[] = users.map(
       (user: TUser): TUser =>
         user.id === id ? { id: id, name: data.name, age: data.age } : user
     );
+   
     setUsers(updatedUser);
     toast.success("row updated ");
     // alert("User Updated!");
     setIsOpen(false);
-  };
 
-  const handleDeleteRow = (id: string) => {
+  },[]);
+
+  const handleDeleteRow = useCallback((id: string) => {
     const updatedUser: TUser[] = users.filter((user: TUser) => user.id !== id);
     setUsers(updatedUser);
     toast.success(`Row deleted with id ${id}`);
     setIsOpen(false);
-  };
+  },[]);
 
-  const calculateAges = (): TCalAges => {
+  const calculateAges = useMemo(()=> (): TCalAges=> {
     const adults = users.reduce<TCalAges>(
       (sumobj: TCalAges, user: TUser) => {
         if (user.age === null) {
@@ -64,7 +67,7 @@ const Table = () => {
         }
         if (user.age < 18) {
           sumobj.teens++;
-        } else if (user.age > 18 && user.age <= 60) {
+        } else if (user.age >= 18 && user.age <= 60) {
           sumobj.adults += 1;
         } else {
           sumobj.olds += 1;
@@ -73,13 +76,15 @@ const Table = () => {
       },
       { teens: 0, adults: 0, olds: 0 }
     );
-
     return adults;
-  };
-
-  function handleAddRow(data: { name: string; age: number | null }) {
+  }, [users]);
+  
+  const handleAddRow= useCallback((data: { name: string; age: number | null })=> {
     setUsers([...users, { id: uuidv4(), age: data.age, name: data.name }]);
-  }
+  },[])
+  // useMemo(()=>{},[])
+  // useCallback(()=>{},[])
+  
 
   // function closePopUp(){
   //     setUser({});

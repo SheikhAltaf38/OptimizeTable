@@ -19,4 +19,4 @@ function CountAge({calculateAges} : Pick<TCalAges,"calculateAges">)  {
   )
 }
 
-export default CountAge
+export default React.memo(CountAge)

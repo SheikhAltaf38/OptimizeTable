@@ -1,11 +1,11 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { HiOutlineTrash } from "react-icons/hi";
 import { HiCheck } from "react-icons/hi";
 import { HiOutlineX } from "react-icons/hi";
 import { TUser } from "../../../Types/TableTypes";
 import { TTableDataPopUpProps } from "../../../Types/TableTypes";
 
-const TableDataPopUp : React.FC<TTableDataPopUpProps>= ({
+const TableDataPopUp : React.FC<TTableDataPopUpProps>= React.memo(({
   user,
   setIsOpen,
   handleUpdateTable,
@@ -117,5 +117,5 @@ const TableDataPopUp : React.FC<TTableDataPopUpProps>= ({
       </div>
     </>
   );
-};
+});
 export default TableDataPopUp;

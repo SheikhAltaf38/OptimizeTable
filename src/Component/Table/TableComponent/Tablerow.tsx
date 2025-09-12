@@ -1,8 +1,9 @@
 import "./tablerow.css"
 import { TUser } from "../../../Types/TableTypes"
 import { TTableRowProps } from "../../../Types/TableTypes"
+import React from "react"
 
-const TableRow : React.FC<TTableRowProps>=({user, handleTablePopup, index})=>{
+const TableRow : React.FC<TTableRowProps>= React.memo(({user, handleTablePopup, index})=>{
 
     return(
         <>
@@ -21,5 +22,5 @@ const TableRow : React.FC<TTableRowProps>=({user, handleTablePopup, index})=>{
         </tr>
         </>
     )
-}
+} )
 export default TableRow;

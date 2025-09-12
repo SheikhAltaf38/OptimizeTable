@@ -3,7 +3,8 @@ import { IoMdClose } from "react-icons/io";
 import "./AddRow.css"
 import { TAddRowProps , TAddRowForm} from "../../../Types/TableTypes";
 
-function AddRow({ handleAddRow, isAddRowOpen, setIsAddRowOpen }: TAddRowProps) {
+
+const AddRow= React.memo(({ handleAddRow, isAddRowOpen, setIsAddRowOpen }: TAddRowProps)=> {
   const initialValue = {
     name: "",
     age: null,
@@ -96,6 +97,6 @@ function AddRow({ handleAddRow, isAddRowOpen, setIsAddRowOpen }: TAddRowProps) {
       </div>
     </div>
   );
-}
+})
 
 export default AddRow;
