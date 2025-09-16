@@ -17,19 +17,20 @@ const AddRow= React.memo(({ handleAddRow, isAddRowOpen, setIsAddRowOpen }: TAddR
     setForm({...form , [name] : value})
   }
   return (
-    <div className="mt-[150px] mb-2">
+    <div className="mt-[20px] md:mt-[150px] mb-2">
       <div className="relative flex justify-center items-center flex-col">
+        
         <button
           onClick={() => setIsAddRowOpen(true)}
           className={`${!isAddRowOpen && 'button'} bg-gradient-to-b from-gray-700 to-gray-950 
-            text-white px-5 py-2 rounded-lg hover:scale-105 transition-all duration-300 text-lg 
-            cursor-pointer`}
+            text-white px-3 md:px-5 py-2 rounded-lg hover:scale-105 transition-all duration-300 text-sm md:text-lg 
+            cursor-pointer  md:static`}
         >
           Add Row
         </button>
         {isAddRowOpen && (
           <>
-            <div className=" mt-5 w-[300px] border p-3 flex flex-col bg-gray-800 text-white rounded-xl ">
+            <div className=" mt-5 w-[220px] md:w-[300px] border p-3 flex flex-col bg-gray-800 text-white rounded-xl ">
               {/* <label htmlFor="id" className="text-lg ml-1">
             Id
           </label>
@@ -50,7 +51,7 @@ const AddRow= React.memo(({ handleAddRow, isAddRowOpen, setIsAddRowOpen }: TAddR
                 value={form.name}
                 name="name"
                 onChange={handleChange}
-                className="w-[150px] text-black placeholder:text-gray-800  md:w-[200px] lg:w-[250px] rounded-md bg-gray-200 px-2 py-1 outline-none focus:bg-gray-300"
+                className="w-[180px] text-black placeholder:text-gray-800  md:w-[200px] lg:w-[250px] rounded-md bg-gray-200 px-2 py-1 outline-none focus:bg-gray-300"
               />
 
               <label htmlFor="id" className="mt-2 text-lg ml-1">
@@ -66,7 +67,7 @@ const AddRow= React.memo(({ handleAddRow, isAddRowOpen, setIsAddRowOpen }: TAddR
                     age: e.target.value === "" ? null : Number(e.target.value),
                   });
                 }}
-                className="w-[150px] text-black placeholder:text-gray-800 md:w-[200px] lg:w-[250px] rounded-md bg-gray-200 px-2 py-1 outline-none focus:bg-gray-300"
+                className="w-[180px] text-black placeholder:text-gray-800 md:w-[200px] lg:w-[250px] rounded-md bg-gray-200 px-2 py-1 outline-none focus:bg-gray-300"
               />
               <div className="mt-3 mx-auto">
                 <button
@@ -74,12 +75,12 @@ const AddRow= React.memo(({ handleAddRow, isAddRowOpen, setIsAddRowOpen }: TAddR
                     handleAddRow(form);
                     setForm(initialValue);
                   }}
-                  className="px-4 py-1 text-xl bg-gradient-to-b from-white via-gray-500 to-gray-900 rounded-xl hover:scale-105 transition-all duration-300 font-semibold shadow-xl mb-5 shadow-gray-900"
+                  className="px-3 md:px-4 py-1 text-lg md:text-xl bg-gradient-to-b from-white via-gray-500 to-gray-900 rounded-xl hover:scale-105 transition-all duration-300 font-semibold shadow-xl mb-5 shadow-gray-900"
                 >
                   Submit
                 </button>
               </div>
-              <div className="absolute left-[85%]">
+              <div className="absolute  left-[70%] md:left-[85%]">
                 <button
                   onClick={() => {
                     setIsAddRowOpen(false);

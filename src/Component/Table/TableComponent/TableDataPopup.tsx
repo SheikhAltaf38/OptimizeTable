@@ -21,7 +21,7 @@ const TableDataPopUp : React.FC<TTableDataPopUpProps>= React.memo(({
   return (
     <>
       <div className=" flex  ">
-        <div className=" bg-gray-900 text-white h-[300px] w-[450px] rounded-xl shadow-gray-900 shadow-xl">
+        <div className=" bg-gray-900 text-white h-[300px] w-[250px] md:h-[300px] md:w-[450px] rounded-xl shadow-gray-900 shadow-xl">
           <div className="space-y-2 flex flex-col items-center rounded-md pt-5">
             <h3 className="text-center text-xl text-white">
               Update your details
@@ -42,7 +42,7 @@ const TableDataPopUp : React.FC<TTableDataPopUpProps>= React.memo(({
                     isValueChange: true,
                   });
                 }}
-                className="cursor-pointer w-80 rounded-xl px-2 py-1 bg-gray-400 focus:bg-gray-600 placeholder:text-white"
+                className="cursor-pointer w-52 md:w-80 rounded-xl px-2 py-1 bg-gray-400 focus:bg-gray-600 placeholder:text-white"
               />
             </div>
 
@@ -61,16 +61,16 @@ const TableDataPopUp : React.FC<TTableDataPopUpProps>= React.memo(({
                     isValueChange: true,
                   });
                 }}
-                className="cursor-pointer w-80 rounded-xl px-2 py-1 bg-gray-400 focus:bg-gray-600 placeholder:text-white"
+                className="cursor-pointer w-52 md:w-80 rounded-xl px-2 py-1 bg-gray-400 focus:bg-gray-600 placeholder:text-white"
               />
             </div>
           </div>
-          <div className="mt-10 flex justify-between mx-14">
+          <div className="mt-10 flex justify-between mx-10 gap-5 md:gap-0">
             <div>
               {form.isValueChange ? (
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="group flex gap-2 items-center px-3 py-1 cursor-pointer bg-gradient-to-b from-gray-300 to-gray-500 rounded-2xl hover:from-gray-400 hover:to-gray-700 transition-all duration-300 hover:scale-105"
+                  className="group flex gap-2 items-center px-2 md:px-3 py-1 cursor-pointer bg-gradient-to-b from-gray-300 to-gray-500 rounded-2xl hover:from-gray-400 hover:to-gray-700 transition-all duration-300 hover:scale-105"
                 >
                   cancel
                   <span className="text-xl group-hover:rotate-20 transition-all duration-300">
@@ -80,7 +80,7 @@ const TableDataPopUp : React.FC<TTableDataPopUpProps>= React.memo(({
               ) : (
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="group flex items-center gap-2 cursor-pointer px-3 py-1 bg-gradient-to-b from-gray-300 to-gray-500 rounded-2xl hover:from-gray-400 hover:to-gray-700 transition-all duration-300 hover:scale-105"
+                  className="group flex items-center gap-2 cursor-pointer px-2 md:px-3 py-1 bg-gradient-to-b from-gray-300 to-gray-500 rounded-2xl hover:from-gray-400 hover:to-gray-700 transition-all duration-300 hover:scale-105"
                 >
                   close{" "}
                   <span className="text-xl group-hover:rotate-20 transition-all duration-300">
@@ -93,7 +93,7 @@ const TableDataPopUp : React.FC<TTableDataPopUpProps>= React.memo(({
               {form.isValueChange ? (
                 <button
                   onClick={() => handleUpdateTable(user.id, form)}
-                  className="group flex gap-2 items-center px-3 py-1 bg-gradient-to-b from-red-300 to-red-500 rounded-2xl hover:bg-red-500 hover:from-red-400 hover:to-red-700 transition-all duration-300 hover:scale-105"
+                  className="group flex gap-2 items-center px-2 md:px-3 py-1 bg-gradient-to-b from-red-300 to-red-500 rounded-2xl hover:bg-red-500 hover:from-red-400 hover:to-red-700 transition-all duration-300 hover:scale-105"
                 >
                   update{" "}
                   <span className="text-lg group-hover:scale-110 transition-all duration-300">
@@ -103,7 +103,7 @@ const TableDataPopUp : React.FC<TTableDataPopUpProps>= React.memo(({
               ) : (
                 <button
                   onClick={() => handleDeleteRow(user.id)}
-                  className="group px-3 py-1 flex mr-2 items-center gap-2 bg-gradient-to-b from-red-300 to-red-500 rounded-2xl hover:bg-red-500 hover:from-red-400 hover:to-red-700 transition-all duration-300 hover:scale-105"
+                  className="group px-2 md:px-3 py-1 flex mr-2 items-center gap-2 bg-gradient-to-b from-red-300 to-red-500 rounded-2xl hover:bg-red-500 hover:from-red-400 hover:to-red-700 transition-all duration-300 hover:scale-105"
                 >
                   delete{" "}
                   <span className="text-xl group-hover:scale-110 transition-all duration-300">

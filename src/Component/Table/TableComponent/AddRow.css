@@ -1,5 +1,5 @@
 .button {
-    animation: animateButton 10000ms linear 2000ms infinite  backwards;
+    animation: animateButton 10000ms linear 2000ms forwards;
 }
 
 
