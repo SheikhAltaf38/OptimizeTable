@@ -6,16 +6,18 @@ import "./TableComponent/tablerow.css";
 import CountAge from "./TableComponent/CountAge.jsx";
 import { toast } from "react-toastify";
 import AddRow from "./TableComponent/AddRow.jsx";
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4, validate } from "uuid";
 import { TUser } from "../../Types/TableTypes";
 import { TCalAges } from "../../Types/TableTypes";
-
+import "./TableComponent/UserDetailComponent.css"
+import * as yup from "yup"
 const Table = () => {
   const usersData = usersDataJson.map(
     (user: Omit<TUser, "id">): TUser => ({ ...user, id: uuidv4() })
   );
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [user, setUser] = useState<TUser | null>(null);
+  const [error , setError] = useState<string>("")
   const [users, setUsers] = useState<TUser[]>(() => {
     const jsonUsers = localStorage.getItem("usersData");
     if (jsonUsers) {
@@ -30,6 +32,17 @@ const Table = () => {
     localStorage.setItem("usersData", JSON.stringify(users));
   }, [users]);
 
+
+  const validationSchema = yup.object().shape({
+    name:yup.string().min(2,"name must be min 20 char").max(20,"name can not above 20 char")
+    .required("name is required")
+    .test("unique","name must be unique",
+      function (value){
+        return !users.some((u)=>{ return u.name === value})
+      }
+    ),
+    age:yup.number().required("age is required")
+  })
   // console.log(users, "users");
 
   // const handleTablePopup = useCallback(
@@ -89,7 +102,12 @@ const Table = () => {
   );
 
   const handleAddRow = useCallback((data: Omit<TUser, "id">) => {
-    setUsers([...users, { id: uuidv4(), age: data.age, name: data.name }]);
+    validationSchema.validate(data)
+    .then(()=>{
+      setUsers([...users, { id: uuidv4(), age: data.age, name: data.name }]);
+    }).catch((err)=>{
+      setError(err.errors)
+    })
   }, []);
   // useMemo(()=>{},[])
   // useCallback(()=>{},[])
@@ -104,7 +122,7 @@ const Table = () => {
 
   return (
     <>
-      <div className="bg-gradient-to-b from-gray-400 via-gray-500 to-gray-600 min-h-screen w-full relative flex justify-center">
+      <div className="bg  min-h-screen w-full relative flex justify-center">
         <div className="relative">
           <div className={`relative ${isOpen && "blur"}`}>
             {/* Table and Add section */}
@@ -161,6 +179,7 @@ const Table = () => {
                   handleAddRow={handleAddRow}
                   isAddRowOpen={isAddRowOpen}
                   setIsAddRowOpen={setIsAddRowOpen}
+                  error={error}
                 />
               </div>
             </div>

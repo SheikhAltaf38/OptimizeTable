@@ -2,20 +2,21 @@ import React, { ChangeEvent, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import "./AddRow.css"
 import { TAddRowProps , TAddRowForm} from "../../../Types/TableTypes";
+import { p } from "react-router/dist/development/index-react-server-client-BYr9g50r";
 
 
-const AddRow= React.memo(({ handleAddRow, isAddRowOpen, setIsAddRowOpen }: TAddRowProps)=> {
+const AddRow= React.memo(({ handleAddRow, isAddRowOpen, setIsAddRowOpen , error }: TAddRowProps)=> {
   const initialValue = {
     name: "",
     age: null,
   };
-
   const [form, setForm] = useState<TAddRowForm>(initialValue);
   function handleChange(e : ChangeEvent<HTMLInputElement>){
     const name = e.target.name;
     const value = e.target.value;
     setForm({...form , [name] : value})
   }
+
   return (
     <div className="mt-[20px] md:mt-[150px] mb-2">
       <div className="relative flex justify-center items-center flex-col">
@@ -92,6 +93,8 @@ const AddRow= React.memo(({ handleAddRow, isAddRowOpen, setIsAddRowOpen }: TAddR
                   </span>
                 </button>
               </div>
+              {error &&
+               <p className="text-red-400 text-center">{error}</p>}
             </div>
           </>
         )}

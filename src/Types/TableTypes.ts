@@ -27,6 +27,7 @@ export type TAddRowProps = {
   handleAddRow: (data: { name: string; age: number | null }) => void;
   isAddRowOpen: boolean;
   setIsAddRowOpen: (a: boolean) => void;
+  error:string
 };
 
 export type TAddRowForm = {
