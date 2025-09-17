@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import "./UserDetailComponent.css";
 import { useNavigate, useParams } from "react-router";
 import { TUser } from "../../../Types/TableTypes";
-
+import * as yup from "yup"
+import { toast } from "react-toastify";
 function UserDetailComponent() {
   const usersData = localStorage.getItem("usersData");
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ function UserDetailComponent() {
   const [users, setUsers] = useState(() => {
     return JSON.parse(usersData);
   });
+  const [error ,setError] = useState<string>("")
 
   const user: TUser = users.find((user: TUser) => {
     return user.id === id;
@@ -34,12 +36,32 @@ function UserDetailComponent() {
     );
   }
 
-  const handleSubmit = () => {
-    const updateUser = users.map((u: TUser) => {
+  const validationSchema = yup.object().shape({
+    name: yup.string().min(2,"min 2 char").max(20,"max 20 char").required()
+    .test("unique","name already exist",function (value){
+      return !users.some((u: TUser)=>{
+       return u.name === value
+      })
+    }),
+    age:yup.number().required("age is required")
+  });
+
+  const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    validationSchema.validate(form)
+    .then(()=>{
+ const updateUser = users.map((u: TUser) => {
       return u.id === id ? { ...u, name: form.name, age: form.age } : u;
     });
     localStorage.setItem("usersData", JSON.stringify(updateUser));
     navigate("/");
+    return
+    })
+    .catch((e)=>{
+      setError(e.errors);
+     return toast.error(e.errors);
+    })
+   
   };
   const handleDelete = (id: string) => {
     const updatedUser = users.filter((user: TUser) => {
@@ -59,7 +81,7 @@ function UserDetailComponent() {
           <h2 className="my-2 text-center text-xl md:text-2xl font-bold border-b-2 w-[50%] mx-auto border-amber-600">
             Hello! {user.name}
           </h2>
-          <form action="" className="p-4 md:px-8 space-y-2 md:space-y-3 ">
+          <form onSubmit={handleSubmit} action=""  className="p-4 md:px-8 space-y-2 md:space-y-3 ">
             <div className="flex flex-col">
               <label
                 htmlFor="name"
@@ -123,7 +145,7 @@ function UserDetailComponent() {
               ) : (
                 <div className="flex justify-around">
                   <button
-                    onClick={handleSubmit}
+                   type="submit"
                     className="px-2 py-1 md:px-6 md:text-xl md:font-semibold rounded-2xl bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-md shadow shadow-amber-700 "
                   >
                     Update
@@ -136,6 +158,7 @@ function UserDetailComponent() {
                   </button>
                 </div>
               )}
+              <p className="text-center text-red-400">{error}</p>
             </div>
             
           </form>

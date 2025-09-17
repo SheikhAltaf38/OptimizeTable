@@ -2,5 +2,5 @@
     box-shadow: 10px 15px 15px rgb(20, 20, 20), -5px -10px 15px rgb(43, 43, 43);
 }
 .bg{
-    background:linear-gradient(45deg, rgba(249, 253, 4,.5) 25% , rgba(199, 179, 0,.2) 50% ,  rgba(118, 106, 0,.5) 75%) ;
+    background:linear-gradient(45deg, #453b37 25%, #201c1a 25%) ;
 }

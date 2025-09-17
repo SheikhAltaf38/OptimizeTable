@@ -24,14 +24,16 @@ export type TCalAges = {
 };
 
 export type TAddRowProps = {
-  handleAddRow: (data: { name: string; age: number | null }) => void;
+  handleAddRow: (data: TAddRowForm) => void;
   isAddRowOpen: boolean;
   setIsAddRowOpen: (a: boolean) => void;
-  error:string
+  error?:string
 };
 
 export type TAddRowForm = {
-  name: string;
+
+  firstName:string;
+  lastName:string;
   age: number | null;
 };
 
