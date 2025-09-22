@@ -11,15 +11,15 @@ const navigate = useNavigate()
         <>
         <tr  className="tablerow flex gap-7 justify-between lg:justify-between text-center border w-[300px] md:w-[400px] lg:w-[506px] cursor-pointer 
         shadow-xl shadow-gray-700 h-full "
-        onClick={()=>{handleTablePopup?.(user.id );
-           navigate(`/user/${user?.id}`) }
+        onClick={()=>{handleTablePopup?.(user._id );
+           navigate(`/user/${user?._id}`) }
         }>
             <td className="w-10 text-md md:w-20 md:text-lg ml-2 md:ml-0" >{index + 1}</td>
-            <td className="w-18 text-md md:w-20 md:text-lg overflow-auto h-full text-left">{user.name}
+            <td className="w-110 text-md md:w-120 md:text-lg lg:w-140 overflow-auto h-full text-left">{user.name}
                 
             </td>
-            <td className=" text-md md:w-24 md:text-lg">{user.age ?? "-"}</td>
-            <td className={`w-15 ml-5 text-md md:w-20 md:text-lg ${user.age === null ? "bg-gray-100 text-black" :user.age < 18 ? "bg-yellow-300 text-black transition-all duration-300 hover:bg-yellow-400" :
+            <td className="w-10 text-md md:w-24 md:text-lg">{user.age ?? "-"}</td>
+            <td className={`w-50 ml-5 text-md md:w-70 md:text-lg ${user.age === null ? "bg-gray-100 text-black" :user.age < 18 ? "bg-yellow-300 text-black transition-all duration-300 hover:bg-yellow-400" :
                  user.age <= 60 ? "bg-green-300 text-black transition-all duration-300 hover:bg-green-400" : 
                  "bg-red-300 text-black transition-all duration-300 hover:bg-red-400" }`}>
                 {user.age === null ? "Unknown": user.age < 18 ? "Teen" : user.age <= 60 ? "Adult" : "Old" } </td>

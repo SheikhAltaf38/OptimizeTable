@@ -11,27 +11,34 @@ import { TAddRowForm, TUser } from "../../Types/TableTypes";
 import { TCalAges } from "../../Types/TableTypes";
 import "./TableComponent/UserDetailComponent.css";
 import * as yup from "yup";
+import axios from "axios";
+
+const BASEURL = "http://localhost:4000";
+
 const Table = () => {
-  const usersData = usersDataJson.map(
-    (user: Omit<TUser, "id">): TUser => ({ ...user, id: uuidv4() })
-  );
+  // const usersData = usersDataJson.map(
+  //   (user: Omit<TUser, "id">): TUser => ({ ...user, id: uuidv4() })
+  // );
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [user, setUser] = useState<TUser | null>(null);
-  // const [error, setError] = useState<string>("");
-  const [users, setUsers] = useState<TUser[]>(() => {
-    const jsonUsers = localStorage.getItem("usersData");
-    if (jsonUsers) {
-      return JSON.parse(jsonUsers);
-    } else {
-      return usersData;
-    }
-  });
-  const [isAddRowOpen, setIsAddRowOpen] = useState<boolean>(false);
+  const [users, setUsers] = useState<TUser[]>()
+   const [isAddRowOpen, setIsAddRowOpen] = useState<boolean>(false);
   const [searchResult, setSearchResult] = useState<TUser[]>();
 
-  useEffect(() => {
-    localStorage.setItem("usersData", JSON.stringify(users));
-  }, [users]);
+
+  // const [error, setError] = useState<string>("");
+  // const [users, setUsers] = useState<TUser[]>(() => {
+  //   const jsonUsers = localStorage.getItem("usersData");
+  //   if (jsonUsers) {
+  //     return JSON.parse(jsonUsers);
+  //   } else {
+  //     return usersData;
+  //   }
+  // });
+ 
+  // useEffect(() => {
+  //   localStorage.setItem("usersData", JSON.stringify(users));
+  // }, [users]);
 
   // const validationSchema = yup.object().shape({
   //   name: yup
@@ -59,31 +66,63 @@ const Table = () => {
   //   [users]
   // );
 
-  const handleUpdateTable = useCallback(
-    (id: string, data: Omit<TUser, "id">) => {
-      const updatedUser: TUser[] = users.map(
-        (user: TUser): TUser =>
-          user.id === id ? { id: id, name: data.name, age: data.age } : user
-      );
 
-      setUsers(updatedUser);
-      toast.success("row updated ");
-      // alert("User Updated!");
-      setIsOpen(false);
+
+
+   const getAllUsers = useCallback(async () => {
+    try{
+        const UsersApiData = await axios.get(`${BASEURL}/users`);
+        if (UsersApiData) {
+          setUsers(UsersApiData.data?.data);
+          console.log(UsersApiData.data.data);       
+        }
+    } catch (error: unknown) {
+      toast.error("Error in get AllUsers");
+    } 
+  },[]) 
+
+  const handleUpdateTable = useCallback(
+    async (id: string, data: Omit<TUser, "_id">) => {
+      // const updatedUser: TUser[] = users.map(
+      //   (user: TUser): TUser =>
+      //     user.id === id ? { id: id, name: data.name, age: data.age } : user
+      // );
+      try {
+        const updatedUsers: TUser[]  = await axios.put(
+          `${BASEURL}/users/${id}`,
+          data
+        );
+        if(updatedUsers){
+          getAllUsers();
+          // setUsers(updatedUsers);
+          toast.success("row updated ");
+          // alert("User Updated!");
+          setIsOpen(false);
+        }
+      } catch (error) {
+        toast.error("Error in updating user");
+      }
     },
     [users]
   );
 
-  const handleDeleteRow = useCallback((id: string) => {
-    const updatedUser: TUser[] = users.filter((user: TUser) => user.id !== id);
-    setUsers(updatedUser);
-    toast.success(`Row deleted with id ${id}`);
-    setIsOpen(false);
+  const handleDeleteRow = useCallback(async (id: string) => {
+    // const updatedUser: TUser[] = users.filter((user: TUser) => user.id !== id);
+    try {
+      const deleteUser = await axios.delete(`${BASEURL}/users/${id}`)
+      if(deleteUser){
+        getAllUsers()
+        toast.success(`Row deleted with id ${id}`);
+      setIsOpen(false);
+      }
+    } catch (error) {
+      toast.error("Error accur in deleting users")
+    }
   }, []);
 
   const calculateAges = useMemo(
     () => (): TCalAges => {
-      const adults: TCalAges = users.reduce<TCalAges>(
+      const adults: TCalAges | undefined = users?.reduce<TCalAges>(
         (sumobj: TCalAges, user: TUser) => {
           if (user.age === null) {
             return sumobj;
@@ -98,32 +137,59 @@ const Table = () => {
           return sumobj;
         },
         { teens: 0, adults: 0, olds: 0 }
-      );
-      return adults;
+      ) ??  { teens: 0, adults: 0, olds: 0 };
+      return adults ;
     },
     [users]
   );
 
-  const handleAddRow = useCallback((data : TAddRowForm ) => {
-    console.log("data",data);
-    
-        setUsers(prev =>[...prev, { id: uuidv4(), age: data.age, name: data.firstName +" " + data.lastName }]);
-        setIsAddRowOpen(false);
+  const handleAddRow = useCallback(
+    async (data: TAddRowForm) => {
+      console.log("data", data);
+      try {
+         const AddedUser = await axios.post(`${BASEURL}/users/create`,
+        {name:data.firstName +" " + data.lastName , age:data.age}
+      )
+      if(AddedUser){
+        getAllUsers();
+         setIsAddRowOpen(false);
+      }
+      //    setUsers((prev) => [
+      //   ...prev,
+      //   {
+      //     id: uuidv4(),
+      //     age: data.age,
+      //     name: data.firstName + " " + data.lastName,
+      //   },
+      // ]);
+     
+      } catch (error) {
+        toast.error("Error in adding row")
+      }  
+    },
+    [setUsers, setIsAddRowOpen, users]
+  );
+
+  const handleSearch = useCallback(
+    (query: string) => {
+      console.log("query ,", query);
       
-  }, [setUsers,setIsAddRowOpen,users]);
+      query = query.trim();
+      const searchUsers = users?.filter((u: TUser | null | undefined) => {
+        if (!u) return false;
+        return u.name?.toLocaleLowerCase().includes(query.toLocaleLowerCase());
+      });
+      console.log(searchUsers, "search users");
 
-  const handleSearch = useCallback((query: string) => {
-    console.log("query ,", query);
+      setSearchResult(searchUsers);
+    },
+    [setSearchResult,users]
+  );
 
-    query = query.trim();
-    const searchUsers = users.filter((u: TUser | null | undefined) => {
-      if (!u) return false;
-      return u.name?.toLocaleLowerCase().includes(query.toLocaleLowerCase());
-    });
-    console.log(searchUsers, "search users");
 
-    setSearchResult(searchUsers);
-  },[setSearchResult]);
+  useEffect(() => {
+   getAllUsers()
+  }, []);
   // useMemo(()=>{},[])
   // useCallback(()=>{},[])
 
@@ -158,14 +224,14 @@ const Table = () => {
                     USER DETAILS
                   </caption>
                   <thead className="flex justify-center">
-                    <tr className=" flex justify-between md:justify-around lg:gap-11  text-center bg-gray-200 py-1 pl-3 md:pl-0 px-1 lg:px-2 border w-[300px] sm:[400px] md:w-[400px] lg:w-[506px]">
-                      <th className="sm:w-0  flex justify-center">
+                    <tr className=" flex justify-between md:justify-between px-1 py-1 gap-1 text-center bg-gray-200  border w-[300px] sm:[400px] md:w-[400px] lg:w-[506px]">
+                      <th className="w-10  flex justify-center">
                         {" "}
                         <button className=" px-2 lg:px-3 py-1 text-sm font-medium lg:text-lg rounded-xl bg-gray-800 hover:cursor-pointer hover:scale-105 transition-all duration-300 hover:bg-gray-900 text-white">
                           Id
                         </button>
                       </th>
-                      <th className="sm:w-0  flex justify-center">
+                      <th className="w-110  flex justify-center md:mr-18">
                         {" "}
                         <button className="ml-4 md:ml-0 group text-sm font-medium lg:text-lg relative px-2 py-1 rounded-2xl bg-gray-800 hover:cursor-pointer hover:scale-105 transition-all duration-700 hover:bg-gray-900 text-white">
                           Name
@@ -174,13 +240,13 @@ const Table = () => {
                           </span>
                         </button>
                       </th>
-                      <th className="sm:w-0   flex justify-start ml-8 md:ml-0 md:pr-12 ">
+                      <th className="w-10  flex justify-start ml-8 md:ml-0 md:mr-10 md:pr-12 ">
                         {" "}
                         <button className="px-2 py-1 text-left text-sm font-medium lg:text-lg rounded-2xl bg-gray-800 hover:cursor-pointer hover:scale-105 transition-all duration-300 hover:bg-gray-900 text-white">
                           Age
                         </button>
                       </th>
-                      <th className="sm:w-0  flex justify-center md:pr-1">
+                      <th className="w-50 flex justify-center md:pr-1">
                         {" "}
                         <button className="px-2 py-1 text-sm font-medium lg:text-lg rounded-2xl bg-gray-800 hover:cursor-pointer hover:scale-105 transition-all duration-300 hover:bg-gray-900 text-white">
                           Category
@@ -189,10 +255,10 @@ const Table = () => {
                     </tr>
                   </thead>
                   <tbody className="flex mx-auto justify-center flex-col">
-                    {(searchResult ? searchResult : users).map(
+                    {(searchResult ?? users ?? []).map(
                       (user, index) => (
                         <TableRow
-                          key={user.id}
+                          key={user._id}
                           user={user}
                           // handleTablePopup={handleTablePopup}
                           index={index}
@@ -206,7 +272,7 @@ const Table = () => {
                   <AddRow
                     handleAddRow={handleAddRow}
                     isAddRowOpen={isAddRowOpen}
-                    setIsAddRowOpen={setIsAddRowOpen}              
+                    setIsAddRowOpen={setIsAddRowOpen}
                   />
                 </div>
               </div>

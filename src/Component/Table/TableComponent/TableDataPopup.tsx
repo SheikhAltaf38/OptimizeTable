@@ -92,7 +92,7 @@ const TableDataPopUp : React.FC<TTableDataPopUpProps>= React.memo(({
             <div>
               {form.isValueChange ? (
                 <button
-                  onClick={() => handleUpdateTable(user.id, form)}
+                  onClick={() => handleUpdateTable(user._id, form)}
                   className="group flex gap-2 items-center px-2 md:px-3 py-1 bg-gradient-to-b from-red-300 to-red-500 rounded-2xl hover:bg-red-500 hover:from-red-400 hover:to-red-700 transition-all duration-300 hover:scale-105"
                 >
                   update{" "}
@@ -102,7 +102,7 @@ const TableDataPopUp : React.FC<TTableDataPopUpProps>= React.memo(({
                 </button>
               ) : (
                 <button
-                  onClick={() => handleDeleteRow(user.id)}
+                  onClick={() => handleDeleteRow(user._id)}
                   className="group px-2 md:px-3 py-1 flex mr-2 items-center gap-2 bg-gradient-to-b from-red-300 to-red-500 rounded-2xl hover:bg-red-500 hover:from-red-400 hover:to-red-700 transition-all duration-300 hover:scale-105"
                 >
                   delete{" "}

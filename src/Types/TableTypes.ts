@@ -1,14 +1,14 @@
 export interface TUser  {
   name?: string;
   age: number | null;
-  id: string;
+  _id: string;
   isValueChange?: boolean;
 };
 
 export type TTableDataPopUpProps = {
   user: TUser;
   setIsOpen: (a: boolean) => void;
-  handleUpdateTable: (id: string, form: Omit<TUser, "id">) => void;
+  handleUpdateTable: (id: string, form: Omit<TUser, "_id">) => void;
   handleDeleteRow: (id: string) => void;
 };
 
