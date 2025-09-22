@@ -71,6 +71,6 @@
 
     "jsx": "react-jsx"                  // ✅ required for React 17+
   },
-  "include": ["src"],
-  "exclude": ["node_modules"]
+  "include": ["Frontend/src"],
+  "exclude": ["Frontend/node_modules"]
 }
