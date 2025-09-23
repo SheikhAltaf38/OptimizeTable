@@ -13,7 +13,7 @@ import "./TableComponent/UserDetailComponent.css";
 import * as yup from "yup";
 import axios from "axios";
 
-const BASEURL = "http://localhost:4000";
+const BASEURL = "https://profilegrid.onrender.com/";
 
 const Table = () => {
   // const usersData = usersDataJson.map(

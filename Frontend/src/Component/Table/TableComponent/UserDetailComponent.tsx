@@ -119,7 +119,7 @@ function UserDetailComponent() {
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:4000/users/${id}`);
+      await axios.delete(`https://profilegrid.onrender.com/users/${id}`);
 
       navigate("/");
     } catch (error) {
