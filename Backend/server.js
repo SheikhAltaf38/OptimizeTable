@@ -2,12 +2,15 @@ import express from "express"
 import userRoutes from "./src/routes/userRoute.js"
 import db from "./src/utility/db.js"
 import cors from 'cors'
+import dotenv from "dotenv"
+dotenv.config();
+
 
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cors({
-    origin:"http://localhost:5173",
+    origin:["http://localhost:5173","https://profilegrid-pi.vercel.app"],
     methods:["GET","POST","PUT","DELETE"],
     allowedHeaders:["Content-Type"]
 }))
@@ -55,7 +58,7 @@ app.use("/users",userRoutes)
 //     res.status(201).send(id + name + namee);
 // });
 
-app.listen(4000,()=>{
+app.listen(process.env.PORT,()=>{
     console.log("server is running");
     db();
 })
