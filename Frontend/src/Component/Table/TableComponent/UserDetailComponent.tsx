@@ -8,7 +8,8 @@ import axios from "axios";
 import {
   getUser,
   getUsers,
-  updateUser
+  updateUser,
+  deleteUser
 } from "../../../apis/UserTable";
 
 function UserDetailComponent() {
@@ -119,8 +120,7 @@ function UserDetailComponent() {
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`https://profilegrid.onrender.com/users/${id}`);
-
+      await deleteUser(id)
       navigate("/");
     } catch (error) {
       toast.error("error in deleting user");

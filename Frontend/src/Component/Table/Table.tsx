@@ -12,8 +12,8 @@ import { TCalAges } from "../../Types/TableTypes.js";
 import "./TableComponent/UserDetailComponent.css";
 import * as yup from "yup";
 import axios from "axios";
-
-const BASEURL = "https://profilegrid.onrender.com";
+import api from "../../apis/main";
+// const BASEURL = "https://profilegrid.onrender.com";
 
 const Table = () => {
   // const usersData = usersDataJson.map(
@@ -71,10 +71,11 @@ const Table = () => {
 
    const getAllUsers = useCallback(async () => {
     try{
-        const UsersApiData = await axios.get(`${BASEURL}/users`);
+        const UsersApiData = await api.get(`/users`);
         if (UsersApiData) {
           setUsers(UsersApiData.data?.data);
-          console.log(UsersApiData.data.data);       
+          console.log(UsersApiData.data.data);  
+          console.log(UsersApiData)     
         }
     } catch (error: unknown) {
       toast.error("Error in get AllUsers");
@@ -88,8 +89,8 @@ const Table = () => {
       //     user.id === id ? { id: id, name: data.name, age: data.age } : user
       // );
       try {
-        const updatedUsers: TUser[]  = await axios.put(
-          `${BASEURL}/users/${id}`,
+        const updatedUsers: TUser[]  = await api.put(
+          `/users/${id}`,
           data
         );
         if(updatedUsers){
@@ -109,7 +110,7 @@ const Table = () => {
   const handleDeleteRow = useCallback(async (id: string) => {
     // const updatedUser: TUser[] = users.filter((user: TUser) => user.id !== id);
     try {
-      const deleteUser = await axios.delete(`${BASEURL}/users/${id}`)
+      const deleteUser = await api.delete(`/users/${id}`)
       if(deleteUser){
         getAllUsers()
         toast.success(`Row deleted with id ${id}`);
@@ -147,7 +148,7 @@ const Table = () => {
     async (data: TAddRowForm) => {
       console.log("data", data);
       try {
-         const AddedUser = await axios.post(`${BASEURL}/users/create`,
+         const AddedUser = await api.post(`/users/create`,
         {name:data.firstName +" " + data.lastName , age:data.age}
       )
       if(AddedUser){
