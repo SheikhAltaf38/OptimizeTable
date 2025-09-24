@@ -1,15 +1,27 @@
 import User from "../models/UserModel.js";
+import redis from "../utility/redis.js";
 
 const getAllUsers = async (req, res) => {
   try {
+    const redisUsers = await redis.get("users");
+    if (redisUsers) {
+      console.log("hit from redis");
+      return res.status(200).json({
+        success: true,
+        message: "users",
+        data: JSON.parse(redisUsers),
+      });
+    }
+
     const users = await User.find();
-    
-    
+
     if (!users)
       return res.status(404).json({
         success: false,
         message: "Users is not found",
       });
+
+    await redis.set("users", JSON.stringify(users), "EX", 60);
 
     return res.status(200).json({
       success: true,
@@ -27,7 +39,23 @@ const getAllUsers = async (req, res) => {
 const getUser = async (req, res) => {
   try {
     const id = req.params.id;
-    console.log(req.params);
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "id is not present",
+      });
+    }
+
+    const RedisUser = await redis.get(`user:${id}`);
+
+    if (RedisUser) {
+      console.log("hit from redis");
+      return res.status(200).json({
+        data: JSON.parse(RedisUser),
+        success: true,
+        message: "this is user",
+      });
+    }
 
     const user = await User.findById(id);
     if (!user)
@@ -39,7 +67,7 @@ const getUser = async (req, res) => {
     return res.status(200).json({
       data: user,
       success: true,
-      message:"this is user"
+      message: "this is user",
     });
   } catch (error) {
     return res.status(500).json({
@@ -53,6 +81,7 @@ const updateUser = async (req, res) => {
   try {
     const id = req.params.id;
     const { name, age } = req.body;
+
     const user = await User.findByIdAndUpdate(
       id,
       { name: name, age: age },
@@ -64,6 +93,9 @@ const updateUser = async (req, res) => {
         success: "user is not found",
         success: false,
       });
+
+    await redis.set(`user:${id}`, JSON.stringify(user), "EX", 60);
+    await redis.del("users");
 
     return res.status(200).json({
       success: true,
@@ -91,6 +123,8 @@ const createUser = async (req, res) => {
     const user = new User({ name: name, age: age });
     await user.save();
 
+    await redis.set(`user:${user._id}`, JSON.stringify(user), "EX", 60);
+    await redis.del("users");
     return res.status(201).json({
       success: true,
       message: "user created",
@@ -122,6 +156,8 @@ const deleteUser = async (req, res) => {
         message: "user is not present",
       });
     }
+
+    await redis.del("users");
 
     return res.status(200).json({
       success: true,
